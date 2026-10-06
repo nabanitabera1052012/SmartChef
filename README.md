@@ -356,6 +356,13 @@ Rate limiting is orchestrated via **Arcjet** in [frontend/lib/arcjet.js](fronten
 > 3. Turn off **"Verify at sign-up"** (or enable Social Login like Google/GitHub for 1-click verification-free login).
 > 4. In development mode, you can also use test emails with bypass code `424242`.
 
+### 6. Password Length & Complexity Requirements
+> By default, Clerk may require up to 15 characters if NIST rules or strict password policies are enabled.
+> To allow shorter passwords (e.g. 8 characters):
+> 1. Go to **[Clerk Dashboard](https://dashboard.clerk.com)** &rarr; **User & Authentication** &rarr; **Password**.
+> 2. Adjust **Minimum password length** to **8** (or your preferred length).
+> 3. *(Optional)* Enable **Google / GitHub Social Login** so users can sign in with 1 click without creating passwords.
+
 ---
 
 ## 🚢 Deployment Guide
