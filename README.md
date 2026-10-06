@@ -29,7 +29,6 @@
 - [Tech Stack](#-tech-stack)
 - [Monorepo Directory Structure](#-monorepo-directory-structure)
 - [Database & Content Modeling](#-database--content-modeling)
-- [Environment Variables](#-environment-variables)
 - [Getting Started & Installation](#-getting-started--installation)
 - [Available Scripts](#-available-scripts)
 - [API & Server Actions Reference](#-api--server-actions-reference)
@@ -146,7 +145,6 @@ SmartChef/
 ├── .gitignore                   # Multi-tier git exclusion rules
 │
 ├── frontend/                    # Next.js 16 Web Application
-│   ├── .env.example             # Frontend environment template
 │   ├── next.config.mjs          # Next.js config (remote image patterns)
 │   ├── proxy.js                 # Next 16 route proxy & Clerk auth matcher
 │   ├── actions/                 # Next.js Server Actions
@@ -183,7 +181,6 @@ SmartChef/
 │   └── public/                  # Assets (logos, hero illustrations)
 │
 └── backend/                     # Strapi 5 Headless CMS
-    ├── .env.example             # Backend environment template
     ├── config/                  # Strapi settings
     │   ├── database.js          # Neon PostgreSQL connection & SSL configuration
     │   ├── server.js            # Port (1337) and host settings
@@ -243,75 +240,14 @@ Bookmark join entity:
 
 ---
 
-## ⚙️ Environment Variables
-
-### **1. Frontend Configuration (`frontend/.env`)**
-
-```env
-# Clerk Authentication (Core 3)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-# Neon PostgreSQL Database Connection
-DATABASE_URL="postgresql://user:password@host/neondb?sslmode=require"
-DATABASE_URL_POOLED="postgresql://user:password@pooler-host/neondb?sslmode=require"
-
-# Strapi CMS Integration
-NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
-STRAPI_API_TOKEN="your_strapi_full_access_token"
-
-# AI & Media APIs
-GEMINI_API_KEY="your_google_gemini_api_key"
-UNSPLASH_ACCESS_KEY="your_unsplash_access_key"
-
-# Security & Rate Limiting
-ARCJET_KEY="your_arcjet_api_key"
-
-# Optional Cloud Storage (S3 / Neon Object Store)
-AWS_ENDPOINT_URL_S3="https://storage.neon.tech"
-AWS_ACCESS_KEY_ID="your_aws_access_key"
-AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
-AWS_REGION="us-east-2"
-```
-
-### **2. Backend Configuration (`backend/.env`)**
-
-```env
-# Server
-HOST=0.0.0.0
-PORT=1337
-
-# Security Tokens (Generated via openssl rand -base64 32)
-APP_KEYS=key1,key2,key3,key4
-API_TOKEN_SALT=salt_string
-ADMIN_JWT_SECRET=admin_jwt_secret
-JWT_SECRET=jwt_secret
-TRANSFER_TOKEN_SALT=transfer_token_salt
-ENCRYPTION_KEY=encryption_key_string
-
-# PostgreSQL Database (Neon)
-DATABASE_CLIENT=postgres
-DATABASE_HOST=ep-your-db-pooler.us-east-2.aws.neon.tech
-DATABASE_PORT=5432
-DATABASE_NAME=neondb
-DATABASE_USERNAME=neondb_owner
-DATABASE_PASSWORD=your_neon_password
-DATABASE_SSL=true
-DATABASE_SSL_REJECT_UNAUTHORIZED=false
-```
-
----
-
 ## 🚀 Getting Started & Installation
 
 ### **Prerequisites**
 - **Node.js**: `v20.0.0` or higher (verified on `v22.x`)
 - **npm**: `v10.0.0` or higher
-- A free **Neon PostgreSQL** database account
-- A free **Clerk** application account
-- A free **Google AI Studio** Gemini API Key
+- A **Neon PostgreSQL** database account
+- A **Clerk** application account
+- A **Google AI Studio** Gemini API Key
 
 ### **1. Clone & Install**
 
@@ -324,18 +260,11 @@ cd SmartChef
 npm run install:all
 ```
 
-### **2. Setup Environment Files**
-
-```bash
-# Copy frontend template
-cp frontend/.env.example frontend/.env
-
-# Copy backend template
-cp backend/.env.example backend/.env
-```
-*Fill in your real API keys in both `.env` files.*
+### **2. Setup Environment Variables**
+Configure your local environment variables for both `frontend` and `backend` with your own credentials (Clerk, Neon PostgreSQL, Gemini API, and Strapi tokens).
 
 ### **3. Run Both Servers Concurrently**
+
 
 ```bash
 # From the project root:
