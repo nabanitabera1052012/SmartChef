@@ -63,11 +63,12 @@ export default async function LandingPage() {
             {/* Hero Image */}
             <Card className="relative aspect-square md:aspect-4/5 border-4 border-stone-900 bg-stone-200 overflow-hidden py-0">
               <Image
-                src="/pasta-dish.png"
-                alt="Delicious pasta dish"
-                width={500}
-                height={500}
+                src="/truffle-risotto.png"
+                alt="Creamy Truffle & Wild Mushroom Risotto"
+                width={600}
+                height={750}
                 className="w-full h-full object-cover"
+                priority
               />
 
               {/* Floating Card */}
@@ -76,7 +77,7 @@ export default async function LandingPage() {
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <h3 className="font-bold text-lg">
-                        Rustic Tomato Basil Pasta
+                        Truffle & Wild Mushroom Risotto
                       </h3>
                       <div className="flex gap-0.5 mt-1">
                         {[...Array(5)].map((_, i) => (
@@ -91,12 +92,12 @@ export default async function LandingPage() {
                       variant="outline"
                       className="border-2 border-green-700 bg-green-50 text-green-700 font-bold"
                     >
-                      98% MATCH
+                      99% MATCH
                     </Badge>
                   </div>
                   <div className="flex gap-4 text-xs text-stone-500 font-medium">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" /> 25 mins
+                      <Clock className="w-3 h-3" /> 30 mins
                     </span>
                     <span className="flex items-center gap-1">
                       <Users className="w-3 h-3" /> 2 servings
