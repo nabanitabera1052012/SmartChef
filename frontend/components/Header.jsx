@@ -24,9 +24,10 @@ export default async function Header() {
           <Image
             src="/orange-logo.png"
             alt="Servd Logo"
-            width={60}
-            height={60}
-            className="w-16"
+            width={120}
+            height={120}
+            className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+            priority
           />
         </Link>
 
