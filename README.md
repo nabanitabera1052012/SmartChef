@@ -1,194 +1,452 @@
 # 🍳 SmartChef (Servd) — AI Cooking Assistant & Smart Pantry
 
-SmartChef is a modern, full-stack AI-powered culinary companion designed to turn your leftover ingredients into culinary masterpieces. By combining Google Gemini AI, Strapi CMS, and Next.js, SmartChef can scan fridge photos, track your pantry, suggest personalized recipes with nutrition breakdowns, and generate printable recipe PDFs.
+<p align="center">
+  <img src="frontend/public/orange-logo.png" alt="SmartChef Logo" width="100" />
+</p>
+
+<p align="center">
+  <strong>Turn your fridge leftovers into culinary masterpieces with AI-driven recipe generation, intelligent pantry tracking, and smart nutrition insights.</strong>
+</p>
+
+<p align="center">
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16.3.3-black?logo=next.js&style=for-the-badge" alt="Next.js" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19.2.8-61DAFB?logo=react&logoColor=black&style=for-the-badge" alt="React" /></a>
+  <a href="https://strapi.io"><img src="https://img.shields.io/badge/Strapi-5.52.2-4945FF?logo=strapi&style=for-the-badge" alt="Strapi" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?logo=tailwind-css&style=for-the-badge" alt="Tailwind CSS" /></a>
+  <a href="https://neon.tech"><img src="https://img.shields.io/badge/Neon-PostgreSQL-00E599?logo=postgresql&logoColor=white&style=for-the-badge" alt="Neon PostgreSQL" /></a>
+  <a href="https://ai.google.dev"><img src="https://img.shields.io/badge/Google-Gemini_AI-4285F4?logo=google&style=for-the-badge" alt="Google Gemini" /></a>
+  <a href="https://clerk.com"><img src="https://img.shields.io/badge/Clerk-Auth_Core_3-6C47FF?logo=clerk&style=for-the-badge" alt="Clerk" /></a>
+  <a href="https://arcjet.com"><img src="https://img.shields.io/badge/Arcjet-Rate_Limiting-27272A?style=for-the-badge" alt="Arcjet" /></a>
+</p>
+
+---
+
+## 📑 Table of Contents
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [System Architecture](#-system-architecture)
+- [Tech Stack](#-tech-stack)
+- [Monorepo Directory Structure](#-monorepo-directory-structure)
+- [Database & Content Modeling](#-database--content-modeling)
+- [Environment Variables](#-environment-variables)
+- [Getting Started & Installation](#-getting-started--installation)
+- [Available Scripts](#-available-scripts)
+- [API & Server Actions Reference](#-api--server-actions-reference)
+- [Security & Rate Limiting](#-security--rate-limiting)
+- [Troubleshooting & Gotchas](#-troubleshooting--gotchas)
+- [Deployment Guide](#-deployment-guide)
+- [Contributing & License](#-contributing--license)
+
+---
+
+## 📖 Overview
+
+**SmartChef** is a full-stack, production-ready web application built to eliminate food waste and elevate home cooking. Using modern multimodality via **Google Gemini Vision**, users can snap a photo of their refrigerator or pantry, automatically identify ingredients, and get tailored recipes that maximize existing supplies.
+
+The project pairs a reactive **Next.js 16** front end (utilizing Turbopack, React 19, and Tailwind CSS v4) with a robust **Strapi 5** headless CMS back end running on top of **Neon Serverless PostgreSQL**.
 
 ---
 
 ## 🌟 Key Features
 
-- **📸 AI Pantry Scanner**: Snap or upload a photo of your fridge or pantry. Powered by **Google Gemini Vision**, SmartChef automatically detects your ingredients.
-- **🧑‍🍳 AI Recipe Generator**: Generate creative recipes tailored to what you already have in stock, complete with step-by-step cooking steps, cooking times, difficulty levels, and nutritional analysis.
-- **🔄 Smart Ingredient Substitutions**: Need a missing ingredient? AI suggests practical substitutes on the fly.
-- **📄 Printable PDF Export**: Export generated recipes to clean, beautifully formatted PDF documents using `@react-pdf/renderer`.
-- **🌍 TheMealDB Integration**: Discover recipe ideas by world cuisines, categories, and a daily featured "Recipe of the Day".
-- **🔐 Clerk Authentication & Tiered Plans**: Seamless auth via Clerk with support for Free and Pro Chef subscription tiers.
-- **🛡️ Rate Limiting & Bot Protection**: Uses **Arcjet** to enforce tier-based token bucket limits on AI generations and pantry scans.
-- **🖼️ Automatic Recipe Imagery**: Integrates with the **Unsplash API** to provide food photography for generated meals.
-- **💾 Strapi 5 Headless CMS**: Manages recipes, user profiles, pantry inventory, and persistent application state connected to a **Neon PostgreSQL** database.
+### 📸 1. AI Fridge & Pantry Scanner
+- Upload or drag-and-drop photos of ingredients, open fridges, or pantry shelves.
+- Analyzed via **Gemini 2.5 Flash Vision** to extract detected item names, quantities, and confidence levels.
+- One-click bulk save to the user's persistent pantry inventory.
+
+### 🧑‍🍳 2. Dynamic AI Recipe Generator
+- Generates bespoke recipes matching whatever is in your pantry.
+- Detailed step-by-step cooking instructions with estimated prep/cook times, difficulty, and serving sizes.
+- Full macro- and micro-nutrient profiles (calories, protein, carbs, fats, vitamins).
+- Ingredient substitute engine suggests alternatives when you're missing an item.
+- Automatic food imagery supplied dynamically via the **Unsplash API**.
+
+### 📄 3. Printable PDF Export
+- Generates clean, publication-ready PDF recipe cards directly on the client using `@react-pdf/renderer`.
+- Download, share, or print recipes without page clutter.
+
+### 🌍 4. Worldwide Recipe Explorer (TheMealDB)
+- Integrated with **TheMealDB** API to browse thousands of authentic global dishes.
+- Filter by categories (*Breakfast, Seafood, Vegetarian, Desserts...*) or world cuisines (*Italian, Japanese, Indian, Mexican...*).
+- Daily rotating featured dish on the Dashboard (*"Recipe of the Day"*).
+
+### 🔐 5. Clerk Auth & Subscription Tiers
+- Authentication managed through **Clerk Core 3** with custom proxy routing.
+- Synchronized profile state with Strapi (`clerkId`, `subscriptionTier`).
+- Tiered feature gating:
+  - **Sous Chef (Free)**: 10 pantry scans/month, 5 AI meal recommendations/month.
+  - **Head Chef (Pro - $7.99/mo)**: Unlimited scans, unlimited AI recipes, nutritional analysis, chef tips, and priority access.
+
+### 🛡️ 6. Enterprise-Grade Rate Limiting & Protection
+- Token-bucket rate limiting implemented via **Arcjet** based on the authenticated user's active tier.
+- Bot detection and abuse prevention protecting sensitive AI generation server actions.
 
 ---
 
-## 🏗️ Project Architecture
+## 🏗️ System Architecture
 
-```
-SmartChef/
-├── frontend/                # Next.js 16 Client & Server Actions
-│   ├── actions/             # Server actions (Gemini AI, Pantry, MealDB)
-│   ├── app/                 # Next.js App Router (Landing, Dashboard, Pantry, Recipes)
-│   ├── components/          # Reusable UI components & dialogs
-│   ├── hooks/               # Custom React hooks
-│   ├── lib/                 # Arcjet config, Clerk user sync, utility functions
-│   ├── public/              # Static assets and brand logos
-│   ├── proxy.js             # Clerk authentication route proxy / middleware
-│   └── package.json
-│
-├── backend/                 # Strapi 5 Headless CMS
-│   ├── config/              # Server, database, and plugin configuration
-│   ├── database/            # Database migrations
-│   ├── src/                 # Content types, controllers, and services
-│   └── package.json
-│
-└── README.md
+```mermaid
+graph TD
+    Client["Next.js 16 Client<br/>(React 19 + Tailwind v4)"]
+    Proxy["Route Proxy (proxy.js)<br/>Clerk Auth Middleware"]
+    ServerActions["Next.js Server Actions<br/>(recipe, pantry, mealdb)"]
+    Arcjet["Arcjet Security<br/>(Rate Limits & Protection)"]
+    Gemini["Google Gemini AI<br/>(Text & Vision Models)"]
+    Unsplash["Unsplash API<br/>(Food Photography)"]
+    MealDB["TheMealDB API<br/>(Global Dishes)"]
+    Strapi["Strapi 5 CMS<br/>(REST API on port 1337)"]
+    Neon["Neon PostgreSQL<br/>(Pooled Serverless DB)"]
+
+    Client --> Proxy
+    Proxy --> ServerActions
+    ServerActions --> Arcjet
+    ServerActions --> Gemini
+    ServerActions --> Unsplash
+    ServerActions --> MealDB
+    ServerActions --> Strapi
+    Strapi --> Neon
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-### **Frontend**
-- **Framework**: [Next.js 16](https://nextjs.org/) (Turbopack, App Router)
-- **Language & Runtime**: React 19, JavaScript (ESM)
-- **Styling**: Tailwind CSS v4, Lucide Icons, Neobrutalism UI design
-- **AI & Vision**: [@google/generative-ai](https://www.npmjs.com/package/@google/generative-ai) (Google Gemini API)
-- **Authentication**: [@clerk/nextjs](https://clerk.com/) (Core 3)
-- **Security & Rate Limiting**: [@arcjet/next](https://arcjet.com/)
-- **Document Generation**: [@react-pdf/renderer](https://react-pdf.org/)
-- **Image Sourcing**: [Unsplash API](https://unsplash.com/developers)
-- **External Recipe Data**: [TheMealDB API](https://www.themealdb.com/api.php)
+### **Frontend (`/frontend`)**
+| Layer | Technology | Description |
+| :--- | :--- | :--- |
+| **Framework** | [Next.js 16.3.3](https://nextjs.org/) | App Router with Turbopack bundler |
+| **Library** | [React 19.2.8](https://react.dev/) | React Server Components (RSC) & Server Actions |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) | Modern CSS-first engine with `@theme` directives |
+| **Components** | Radix UI Primitive & Base UI | Accessible dialogs, tabs, badges, and modals |
+| **Icons** | [Lucide React](https://lucide.dev/) | High-quality feather icons |
+| **Authentication** | [@clerk/nextjs](https://clerk.com/) | Clerk Core 3 (`<Show>` conditional components) |
+| **Artificial Intelligence** | [@google/generative-ai](https://www.npmjs.com/package/@google/generative-ai) | Google Gemini 2.5 Flash Vision & Text |
+| **Rate Limiting** | [@arcjet/next](https://arcjet.com/) | Token-bucket quotas & bot defense |
+| **PDF Generation** | [@react-pdf/renderer](https://react-pdf.org/) | In-browser PDF generation engine |
+| **Toasts** | [Sonner](https://sonner.emilkowal.ski/) | Opinionated toast notifications |
 
-### **Backend**
-- **CMS**: [Strapi 5](https://strapi.io/)
-- **Database**: [PostgreSQL (Neon Serverless)](https://neon.tech/)
-- **Storage**: AWS S3 compatible object storage
+### **Backend (`/backend`)**
+| Layer | Technology | Description |
+| :--- | :--- | :--- |
+| **CMS** | [Strapi 5.52.2](https://strapi.io/) | Headless Node.js content management system |
+| **Database** | [Neon PostgreSQL](https://neon.tech/) | Serverless PostgreSQL with SSL connection pooling |
+| **Database Client** | `pg` 8.20.0 | Native Postgres driver |
+| **Admin Panel** | Strapi Vite Admin | Visual CMS management interface at `/admin` |
+
+---
+
+## 📂 Monorepo Directory Structure
+
+```
+SmartChef/
+├── package.json                 # Monorepo root configuration & concurrent runner
+├── package-lock.json
+├── README.md                    # Project documentation
+├── .gitignore                   # Multi-tier git exclusion rules
+│
+├── frontend/                    # Next.js 16 Web Application
+│   ├── .env.example             # Frontend environment template
+│   ├── next.config.mjs          # Next.js config (remote image patterns)
+│   ├── proxy.js                 # Next 16 route proxy & Clerk auth matcher
+│   ├── actions/                 # Next.js Server Actions
+│   │   ├── mealdb.actions.js    # TheMealDB queries (daily, category, cuisine)
+│   │   ├── pantry.actions.js    # Gemini vision scan & pantry CRUD
+│   │   └── recipe.actions.js    # Gemini recipe generation, bookmarking
+│   ├── app/                     # App Router pages & layouts
+│   │   ├── layout.js            # Root layout with ClerkProvider & Header
+│   │   ├── page.js              # Landing page (hero, stats, features, pricing)
+│   │   ├── (auth)/              # Sign-in & Sign-up routes
+│   │   └── (main)/              # Protected application workspace
+│   │       ├── dashboard/       # Daily dish, categories, world cuisines
+│   │       ├── pantry/          # Interactive pantry inventory & scanner
+│   │       ├── recipe/          # Detailed recipe view with AI generator
+│   │       └── recipes/         # Saved collection & category/cuisine filters
+│   ├── components/              # Shared UI components & Modals
+│   │   ├── AddToPantryModal.jsx # Scan/manual entry modal
+│   │   ├── Header.jsx           # Global sticky navbar with Clerk auth
+│   │   ├── HowToCookModal.jsx   # Quick recipe search dialog
+│   │   ├── ImageUploader.jsx    # Drag-and-drop file upload
+│   │   ├── PricingModal.jsx     # Subscription modal trigger
+│   │   ├── PricingSection.jsx   # Free vs Pro plan pricing cards
+│   │   ├── RecipeCard.jsx       # Universal recipe visual card
+│   │   ├── RecipeGrid.jsx       # Category/cuisine meal list grid
+│   │   ├── RecipePDF.jsx        # PDF document layout
+│   │   └── ui/                  # Design system primitives (Button, Card, Dialog...)
+│   ├── hooks/                   # Custom hooks
+│   │   └── use-fetch.js         # Standardized async action hook with useCallback
+│   ├── lib/                     # Utilities & configuration
+│   │   ├── arcjet.js            # Arcjet rate-limiting clients
+│   │   ├── checkUser.js         # Clerk user sync with Strapi
+│   │   ├── data.js              # Static datasets (stats, features, emojis)
+│   │   └── utils.js             # CSS class merging (cn)
+│   └── public/                  # Assets (logos, hero illustrations)
+│
+└── backend/                     # Strapi 5 Headless CMS
+    ├── .env.example             # Backend environment template
+    ├── config/                  # Strapi settings
+    │   ├── database.js          # Neon PostgreSQL connection & SSL configuration
+    │   ├── server.js            # Port (1337) and host settings
+    │   └── plugins.js           # Plugin activations
+    ├── src/
+    │   ├── index.js             # Strapi lifecycle bootstrap
+    │   ├── extensions/          # Plugin overrides
+    │   │   └── users-permissions/
+    │   │       └── content-types/user/schema.json # Extended User schema
+    │   └── api/                 # Content-Type definitions & controllers
+    │       ├── pantry-item/     # Pantry item schema & relations
+    │       ├── receipe/         # Recipe schema (instructions, nutrition)
+    │       └── saved-receipe/   # Saved bookmark relation schema
+    └── types/                   # Generated TypeScript definitions
+```
+
+---
+
+## 🗄️ Database & Content Modeling
+
+Strapi manages 4 core models stored inside **Neon PostgreSQL**:
+
+### **1. User (`plugin::users-permissions.user`)**
+Extended with custom attributes:
+- `clerkId` (*string, unique*): Maps to Clerk's user ID.
+- `firstName` (*string*): User first name.
+- `lastName` (*string*): User last name.
+- `imageUrl` (*string*): Avatar URL.
+- `subscriptionTier` (*enumeration: `free` | `pro`*): User plan status.
+
+### **2. Receipe (`api::receipe.receipe`)**
+Stores AI-generated and custom recipes:
+- `title` (*string, required*): Recipe name.
+- `description` (*text*): Summary overview.
+- `cuisine` (*enumeration*): World cuisine type.
+- `category` (*enumeration*): Breakfast, Lunch, Dinner, Snack, Dessert.
+- `ingredients` (*json*): Array of measured ingredients.
+- `instructions` (*json*): Step-by-step cooking steps.
+- `prepTime` / `cookTime` / `servings` (*integer*).
+- `nutrition` (*json*): Calories, protein, carbs, fats.
+- `tips` / `substitutions` (*json*): Pro tips & substitutions.
+- `imageUrl` (*string*): High-res photo URL.
+- `author` (*manyToOne* &rarr; `User`).
+
+### **3. Pantry Item (`api::pantry-item.pantry-item`)**
+Tracks ingredients currently in the user's kitchen:
+- `name` (*string, required*): Ingredient name.
+- `quantity` (*string*): Measured amount (e.g., "2 cups", "500g").
+- `imageUrl` (*string*): Optional photo.
+- `owner` (*manyToOne* &rarr; `User`).
+
+### **4. Saved Receipe (`api::saved-receipe.saved-receipe`)**
+Bookmark join entity:
+- `SaveAt` (*datetime*): When the user bookmarked the recipe.
+- `user` (*manyToOne* &rarr; `User`).
+- `receipe` (*manyToOne* &rarr; `Receipe`).
 
 ---
 
 ## ⚙️ Environment Variables
 
-### **1. Frontend (`frontend/.env`)**
-Create or verify `frontend/.env` with the following variables:
+### **1. Frontend Configuration (`frontend/.env`)**
 
 ```env
-# Clerk Authentication
+# Clerk Authentication (Core 3)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 
-# Database Connection (Neon Postgres)
-DATABASE_URL="postgresql://<user>:<password>@<host>/<database>?sslmode=require"
-DATABASE_URL_POOLED="postgresql://<user>:<password>@<pooler-host>/<database>?sslmode=require"
+# Neon PostgreSQL Database Connection
+DATABASE_URL="postgresql://user:password@host/neondb?sslmode=require"
+DATABASE_URL_POOLED="postgresql://user:password@pooler-host/neondb?sslmode=require"
 
-# Strapi Backend
+# Strapi CMS Integration
 NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
-STRAPI_API_TOKEN="your_strapi_api_token"
+STRAPI_API_TOKEN="your_strapi_full_access_token"
 
-# AI & APIs
+# AI & Media APIs
 GEMINI_API_KEY="your_google_gemini_api_key"
 UNSPLASH_ACCESS_KEY="your_unsplash_access_key"
 
 # Security & Rate Limiting
 ARCJET_KEY="your_arcjet_api_key"
 
-# S3 / Cloud Storage (Optional)
-AWS_ENDPOINT_URL_S3="https://<bucket>.storage.<region>.aws.neon.tech"
-AWS_ACCESS_KEY_ID="your_aws_key_id"
-AWS_SECRET_ACCESS_KEY="your_aws_secret"
+# Optional Cloud Storage (S3 / Neon Object Store)
+AWS_ENDPOINT_URL_S3="https://storage.neon.tech"
+AWS_ACCESS_KEY_ID="your_aws_access_key"
+AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
 AWS_REGION="us-east-2"
 ```
 
-### **2. Backend (`backend/.env`)**
-Create or verify `backend/.env` with the following variables:
+### **2. Backend Configuration (`backend/.env`)**
 
 ```env
+# Server
 HOST=0.0.0.0
 PORT=1337
 
-# Strapi Secrets
+# Security Tokens (Generated via openssl rand -base64 32)
 APP_KEYS=key1,key2,key3,key4
-API_TOKEN_SALT=salt
-ADMIN_JWT_SECRET=secret
-JWT_SECRET=secret
-TRANSFER_TOKEN_SALT=salt
-ENCRYPTION_KEY=key
+API_TOKEN_SALT=salt_string
+ADMIN_JWT_SECRET=admin_jwt_secret
+JWT_SECRET=jwt_secret
+TRANSFER_TOKEN_SALT=transfer_token_salt
+ENCRYPTION_KEY=encryption_key_string
 
-# Database (PostgreSQL)
+# PostgreSQL Database (Neon)
 DATABASE_CLIENT=postgres
-DATABASE_HOST=<host>
+DATABASE_HOST=ep-your-db-pooler.us-east-2.aws.neon.tech
 DATABASE_PORT=5432
-DATABASE_NAME=<dbname>
-DATABASE_USERNAME=<username>
-DATABASE_PASSWORD=<password>
+DATABASE_NAME=neondb
+DATABASE_USERNAME=neondb_owner
+DATABASE_PASSWORD=your_neon_password
 DATABASE_SSL=true
+DATABASE_SSL_REJECT_UNAUTHORIZED=false
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started & Installation
 
 ### **Prerequisites**
-- **Node.js**: `v20.x` or later (tested on `v22.x`)
-- **npm**: `v10.x` or later
+- **Node.js**: `v20.0.0` or higher (verified on `v22.x`)
+- **npm**: `v10.0.0` or higher
+- A free **Neon PostgreSQL** database account
+- A free **Clerk** application account
+- A free **Google AI Studio** Gemini API Key
 
-### **1. Installation**
-
-Install all dependencies in one command from the project root:
+### **1. Clone & Install**
 
 ```bash
+# Clone the repository
+git clone https://github.com/nabanitabera1052012/SmartChef.git
+cd SmartChef
+
+# Install all dependencies across monorepo in one command
 npm run install:all
 ```
 
-Or install individually:
+### **2. Setup Environment Files**
 
 ```bash
-# Root & monorepo tools
-npm install
+# Copy frontend template
+cp frontend/.env.example frontend/.env
 
-# Backend & frontend
-npm --prefix backend install
-npm --prefix frontend install
+# Copy backend template
+cp backend/.env.example backend/.env
 ```
+*Fill in your real API keys in both `.env` files.*
 
-### **2. Running the Development Servers**
-
-You can now run **both servers together with a single command** from the root folder:
+### **3. Run Both Servers Concurrently**
 
 ```bash
+# From the project root:
 npm run dev
 ```
 
-This starts both:
-- **Backend (Strapi)** on [http://localhost:1337](http://localhost:1337) (Admin: [http://localhost:1337/admin](http://localhost:1337/admin))
-- **Frontend (Next.js)** on [http://localhost:3000](http://localhost:3000)
-
-Alternatively, run each service individually:
-
-```bash
-npm run dev:backend    # Starts Strapi only
-npm run dev:frontend   # Starts Next.js only
-```
+This starts:
+- 🌐 **Frontend (Next.js)** at [http://localhost:3000](http://localhost:3000)
+- ⚙️ **Backend (Strapi)** at [http://localhost:1337](http://localhost:1337)
+- 🎛️ **Strapi Admin Panel** at [http://localhost:1337/admin](http://localhost:1337/admin)
 
 ---
 
-## 📖 Main Pages & Routes
+## 📜 Available Scripts
 
-| Route | Description |
+Run these scripts from the repository root:
+
+| Command | Action |
 | :--- | :--- |
-| `/` | Landing page showcasing features, live stats, and pricing tiers |
-| `/sign-in` & `/sign-up` | Clerk authentication pages |
-| `/dashboard` | User kitchen dashboard, daily meal inspiration, and categories |
-| `/recipes` | Saved and generated custom recipes |
-| `/pantry` | Interactive inventory tracker & AI camera/image fridge scanner |
-| `http://localhost:1337/admin` | Strapi CMS administrator dashboard |
+| `npm run dev` | Starts **both** Strapi and Next.js concurrently using `concurrently` |
+| `npm run dev:frontend` | Starts only the Next.js development server on port 3000 |
+| `npm run dev:backend` | Starts only the Strapi development server on port 1337 |
+| `npm run build` | Builds both the Strapi admin panel and Next.js production bundle |
+| `npm run lint` | Runs ESLint across the Next.js code with zero warnings |
+| `npm run install:all` | Installs dependencies in the root, backend, and frontend |
+
+---
+
+## 📡 API & Server Actions Reference
+
+### **Next.js Server Actions**
+
+#### `pantry.actions.js`
+- `scanPantryImage(formData)`: Uploads image to Gemini 2.5 Flash Vision, validates against Arcjet tier scan limits, and returns detected ingredients list.
+- `saveScannedIngredients(formData)`: Bulk saves scanned items linked to the authenticated user.
+- `addPantryItemManually(formData)`: Adds single item with name and quantity.
+- `getPantryItems()`: Retrieves all pantry items owned by the authenticated user.
+- `updatePantryItem(formData)`: Updates name/quantity for an existing pantry item.
+- `deletePantryItem(formData)`: Removes item from user inventory.
+
+#### `recipe.actions.js`
+- `getOrGenerateRecipe(formData)`: Checks if recipe exists in database; if not, calls Gemini to craft detailed instructions, macros, and substitutes, fetches image from Unsplash, and saves to database.
+- `saveRecipeToCollection(formData)`: Bookmarks a recipe into the user's personal cookbook.
+- `removeRecipeFromCollection(formData)`: Removes bookmark.
+- `getSavedRecipes()`: Retrieves all recipes bookmarked by the user.
+
+#### `mealdb.actions.js`
+- `getRecipeOfTheDay()`: Fetches cached featured daily recipe.
+- `getCategories()`: Fetches all meal categories (*Chicken, Beef, Dessert...*).
+- `getAreas()`: Fetches all global culinary areas (*Italian, Indian, Japanese...*).
+- `getMealsByCategory(category)`: Lists all meals matching a category.
+- `getMealsByArea(area)`: Lists all meals matching a cuisine region.
+
+---
+
+## 🛡️ Security & Rate Limiting
+
+Rate limiting is orchestrated via **Arcjet** in [frontend/lib/arcjet.js](frontend/lib/arcjet.js):
+
+- **Free Tier (`freePantryScans`)**:
+  - Token Bucket: Max 10 tokens / 30-day interval.
+  - Refill rate: 10 tokens per month.
+- **Free Tier (`freeMealRecommendations`)**:
+  - Token Bucket: Max 5 tokens / 30-day interval.
+- **Pro Tier (`proTierLimit`)**:
+  - Capacity: 1000 tokens / 30-day interval.
+- **Bot Protection**: Automated bot detection enabled across AI routes to prevent credential abuse and token exhaustion.
+
+---
+
+## 💡 Troubleshooting & Gotchas
+
+### 1. Clerk Core 3 Breaking Change
+> In `@clerk/nextjs` Core 3, `<SignedIn>` and `<SignedOut>` have been deprecated and throw exceptions.
+> **Fix**: Use `<Show when="signed-in">` and `<Show when="signed-out">` imported from `@clerk/nextjs`.
+
+### 2. Next.js 16 Route Matcher & Proxy
+> Next.js 16 uses `proxy.js` at the frontend root rather than legacy `middleware.js`. Ensure `NextResponse` is imported:
+> `import { NextResponse } from 'next/server';`
+
+### 3. Strapi Schema Relational Fields
+> Ensure relations in `schema.json` explicitly point to `plugin::users-permissions.user` for user references (e.g., `owner`, `author`, `user`), and never to self-referential entity IDs.
+
+### 4. Neon Database SSL on Windows
+> When connecting to Neon from local Node environments, configure `DATABASE_SSL=true` and `DATABASE_SSL_REJECT_UNAUTHORIZED=false` in `backend/.env` to avoid self-signed certificate rejection.
+
+---
+
+## 🚢 Deployment Guide
+
+### **Deploying the Frontend (Vercel)**
+1. Import the repository on [Vercel](https://vercel.com).
+2. Set **Root Directory** to `frontend`.
+3. Add all variables from `frontend/.env.example` in Vercel's Environment Variables settings.
+4. Set build command to `next build`.
+5. Deploy.
+
+### **Deploying the Backend (Strapi Cloud / Render / Railway)**
+1. Create a Web Service on [Render](https://render.com) or [Railway](https://railway.app).
+2. Set **Root Directory** to `backend`.
+3. Build Command: `npm install && npm run build`
+4. Start Command: `npm run start`
+5. Supply database credentials from your **Neon PostgreSQL** dashboard.
 
 ---
 
 ## 🤝 Contributing & License
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m "feat: add amazing feature"`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork the Project: `git checkout -b feature/AmazingFeature`
+2. Commit your Changes: `git commit -m 'feat: add AmazingFeature'`
+3. Push to the Branch: `git push origin feature/AmazingFeature`
+4. Open a Pull Request
 
-Created with 💗 by Nabanita.
+Distributed under the MIT License. Created with 💗 by [Nabanita Bera](https://github.com/nabanitabera1052012).
