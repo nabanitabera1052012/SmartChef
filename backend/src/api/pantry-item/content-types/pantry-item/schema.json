@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pantry_items",
+  "info": {
+    "singularName": "pantry-item",
+    "pluralName": "pantry-items",
+    "displayName": "Pantry Item"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "quantity": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

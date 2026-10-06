@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "clerkId": {
+      "type": "string",
+      "unique": true
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "subscriptionTier": {
+      "type": "enumeration",
+      "enum": [
+        "free",
+        "pro"
+      ],
+      "default": "free"
+    }
+  }
+}

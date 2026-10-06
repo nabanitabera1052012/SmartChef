@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "saved_receipes",
+  "info": {
+    "singularName": "saved-receipe",
+    "pluralName": "saved-receipes",
+    "displayName": "Saved Receipe"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "SaveAt": {
+      "type": "datetime"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "receipe": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::receipe.receipe"
+    }
+  }
+}
