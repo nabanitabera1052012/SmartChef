@@ -15,7 +15,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider appearance={{ baseTheme: "neobrutalism" }}>
+    <ClerkProvider
+      appearance={{
+        baseTheme: "neobrutalism",
+        elements: {
+          footerAction__securedBy: "hidden",
+        },
+      }}
+    >
     <html
       lang="en"
       className={`${inter.variable} h-full antialiased`}

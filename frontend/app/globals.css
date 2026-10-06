@@ -128,3 +128,16 @@
     @apply font-sans;
   }
 }
+
+/* Hide "Secured by Clerk" branding and development mode badge */
+.cl-footerAction__securedBy,
+.cl-footer a[href*="clerk.com"],
+.cl-footer div:has(a[href*="clerk.com"]),
+.cl-footer span:has(a[href*="clerk.com"]),
+.cl-developmentBadge,
+.cl-internal-b3fm6y,
+.cl-internal-1dauvpw,
+[data-localization-key="footerAction.securedByClerk"],
+.cl-footer > div:last-child:not(:first-child) {
+  display: none !important;
+}
