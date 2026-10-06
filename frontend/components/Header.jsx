@@ -1,11 +1,10 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { Cookie, Refrigerator, Sparkles } from "lucide-react";
+import { Cookie, Refrigerator, Sparkles, ChefHat } from "lucide-react";
 import Link from "next/link";
 import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 import HowToCookModal from "./HowToCookModal";
 import PricingModal from "./PricingModal";
-import Image from "next/image";
 import { checkUser } from "@/lib/checkUser";
 import { Badge } from "./ui/badge";
 import UserDropdown from "./UserDropdown";
@@ -16,19 +15,17 @@ export default async function Header() {
   return (
     <header className="fixed top-0 w-full border-b border-stone-200 bg-stone-50/80 backdrop-blur-md z-50 supports-backdrop-filter:bg-stone-50/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
+        {/* Brand Logo */}
         <Link
           href={user ? "/dashboard" : "/"}
-          className="flex items-center gap-2 group"
+          className="flex items-center gap-2.5 group"
         >
-          <Image
-            src="/orange-logo.png"
-            alt="Servd Logo"
-            width={120}
-            height={120}
-            className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
-            priority
-          />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105">
+            <ChefHat className="w-6 h-6" />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-stone-900 group-hover:text-orange-600 transition-colors">
+            Smart<span className="text-orange-600">Chef</span>
+          </span>
         </Link>
 
         {/* Navigation Links */}

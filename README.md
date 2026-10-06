@@ -1,8 +1,5 @@
-# 🍳 SmartChef (Servd) — AI Cooking Assistant & Smart Pantry
+# 🍳 SmartChef — AI Cooking Assistant & Smart Pantry
 
-<p align="center">
-  <img src="frontend/public/orange-logo.png" alt="SmartChef Logo" width="100" />
-</p>
 
 <p align="center">
   <strong>Turn your fridge leftovers into culinary masterpieces with AI-driven recipe generation, intelligent pantry tracking, and smart nutrition insights.</strong>
