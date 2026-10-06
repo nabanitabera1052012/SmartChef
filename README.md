@@ -351,6 +351,14 @@ Rate limiting is orchestrated via **Arcjet** in [frontend/lib/arcjet.js](fronten
 ### 4. Neon Database SSL on Windows
 > When connecting to Neon from local Node environments, configure `DATABASE_SSL=true` and `DATABASE_SSL_REJECT_UNAUTHORIZED=false` in `backend/.env` to avoid self-signed certificate rejection.
 
+### 5. Disabling Email Verification (Instant Sign-Up)
+> By default, Strapi users are automatically marked as `confirmed: true` by SmartChef's `checkUser.js`.
+> To skip or disable email OTP verification during user sign-up in **Clerk**:
+> 1. Go to your **[Clerk Dashboard](https://dashboard.clerk.com)** &rarr; **User & Authentication** &rarr; **Email, Phone, Username**.
+> 2. Click the gear icon next to **Email Address**.
+> 3. Turn off **"Verify at sign-up"** (or enable Social Login like Google/GitHub for 1-click verification-free login).
+> 4. In development mode, you can also use test emails with bypass code `424242`.
+
 ---
 
 ## 🚢 Deployment Guide

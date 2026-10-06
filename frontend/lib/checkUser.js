@@ -80,10 +80,11 @@ export const checkUser = async () => {
     }
 
     // Create new user
+    const primaryEmail = user.emailAddresses?.[0]?.emailAddress;
     const userData = {
       username:
-        user.username || user.emailAddresses[0].emailAddress.split("@")[0],
-      email: user.emailAddresses[0].emailAddress,
+        user.username || primaryEmail?.split("@")[0] || `chef_${user.id.slice(-6)}`,
+      email: primaryEmail || `${user.username || user.id}@smartchef.local`,
       password: `clerk_managed_${user.id}_${Date.now()}`,
       confirmed: true,
       blocked: false,
